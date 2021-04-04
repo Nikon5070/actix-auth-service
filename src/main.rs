@@ -1,5 +1,7 @@
 mod config;
+mod handlers;
 
+use crate::handlers::app_config;
 use actix_web::{middleware::Logger, App, HttpServer};
 use color_eyre::Result;
 use tracing::info;
@@ -10,7 +12,7 @@ async fn main() -> Result<()> {
 
     info!("Starting server at http://{}:{}", config.host, config.port);
 
-    HttpServer::new(|| App::new().wrap(Logger::default()))
+    HttpServer::new(|| App::new().wrap(Logger::default()).configure(app_config))
         .bind(format!("{}:{}", config.host, config.port))?
         .run()
         .await?;
